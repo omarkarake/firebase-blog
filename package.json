@@ -13,6 +13,9 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/fire": "^18.0.1",
+    "firebase": "^10.14.0",
+    "ngx-toastr": "^19.0.0",
     "@angular/animations": "^18.0.0",
     "@angular/common": "^18.0.0",
     "@angular/compiler": "^18.0.0",
