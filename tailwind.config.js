@@ -11,7 +11,7 @@ module.exports = {
           200: '#BFDBFE',
           300: '#93C5FD',
           400: '#60A5FA',
-          500: '#3B82F6',
+          500: '#3B82F6',  // This is our main primary color
           600: '#2563EB',
           700: '#1D4ED8',
           800: '#1E40AF',
@@ -26,7 +26,7 @@ module.exports = {
           500: '#6B7280',
           600: '#4B5563',
           700: '#374151',
-          800: '#1F2937',
+          800: '#1F2937',  // This was our original secondary color
           900: '#111827',
         },
         accent: {
@@ -35,7 +35,7 @@ module.exports = {
           200: '#FDE68A',
           300: '#FCD34D',
           400: '#FBBF24',
-          500: '#F59E0B',
+          500: '#F59E0B',  // This was our original accent color
           600: '#D97706',
           700: '#B45309',
           800: '#92400E',
