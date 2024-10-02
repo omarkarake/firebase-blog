@@ -66,6 +66,24 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  loginWithGoogle(): void {
+    this.loading = true;
+    this.authService.createAcountWithGoogle().subscribe({
+      next: () => {
+        this.loading = false;
+        this.router.navigateByUrl('/main');
+      },
+      error: (err) => {
+        this.loading = false;
+        if (err.message === 'Google login canceled by the user.') {
+          this.toastr.error('Google login canceled. Please try again.');
+        } else {
+          this.toastr.error(err.message || 'Google login failed');
+        }
+      },
+    });
+  }
+
   // Method to log validation errors in the console
   logValidationErrors(): void {
     const controls = this.loginForm.controls;

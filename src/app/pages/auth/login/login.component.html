@@ -51,7 +51,10 @@
               <div *ngIf="loading" class="loader"></div>
             </div>
 
-            <div class="py-1 bg-white border-[1px] border-black cursor-pointer rounded-lg flex items-center justify-center">
+            <div
+              (click)="loginWithGoogle()"
+              class="py-1 bg-white border-[1px] border-black cursor-pointer rounded-lg flex items-center justify-center"
+            >
               <div class="flex items-center gap-5">
                 <div class="w-5 h-5">
                   <img src="assets/google.svg" alt="google logo" />

@@ -5,6 +5,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -59,6 +61,24 @@ export class AuthService {
         return of({ success: false });
       })
     );
+  }
+
+  createAcountWithGoogle(): Observable<void> {
+    const provider = new GoogleAuthProvider();
+    const promise = signInWithPopup(this.firebaseAuth, provider)
+      .then(() => {
+        this.loggedIn= true;
+      })
+      .catch((error) => {
+        if (error.code === 'auth/popup-closed-by-user') {
+          return Promise.reject(
+            new Error('Google login canceled by the user.')
+          );
+        }
+        return Promise.reject(error);
+      });
+
+    return from(promise); // return the promise to an observable
   }
 
   // Signup method
