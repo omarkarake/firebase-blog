@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-signup',
@@ -48,7 +49,7 @@ export class SignupComponent implements OnInit {
   // Submit function
   onSubmit(): void {
     if (this.signupForm.valid) {
-      const { fullName, email, password } = this.signupForm.value;
+      const { fullName, email, password }: User = this.signupForm.value;
       console.log('Form value:', this.signupForm.value);
     } else {
       this.logValidationErrors();
