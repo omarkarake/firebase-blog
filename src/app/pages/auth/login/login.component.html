@@ -17,27 +17,46 @@
           >
             Sign in to your account
           </h1>
-          <form class="space-y-4 md:space-y-6" action="#">
+
+          <!-- Reactive form binding with [formGroup] -->
+          <form
+            [formGroup]="loginForm"
+            (ngSubmit)="onSubmit()"
+            class="space-y-4 md:space-y-6"
+          >
+            <!-- Email Input -->
             <div>
               <app-input-label
                 label="Your email"
                 placeholder="name@company.com"
+                [control]="emailControl"
               ></app-input-label>
             </div>
+
+            <!-- Password Input -->
             <div>
               <app-input-label
                 label="Password"
                 placeholder="••••••••"
+                [control]="passwordControl"
+                [type]="'password'"
               ></app-input-label>
             </div>
+
+            <!-- Submit Button -->
             <div class="mt-2">
-              <app-button text="Sign in"></app-button>
+                <app-button text="Sign in"></app-button>
             </div>
+
+            <!-- Sign Up Link -->
             <p class="text-sm font-light text-secondary-500">
               Don’t have an account yet?
-              <a href="#" class="font-medium text-primary-600 hover:underline" routerLink="/auth/signup"
-                >Sign up</a
+              <a
+                class="font-medium text-primary-600 hover:underline"
+                routerLink="/auth/signup"
               >
+                Sign up
+              </a>
             </p>
           </form>
         </div>

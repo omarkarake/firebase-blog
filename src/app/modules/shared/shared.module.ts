@@ -7,6 +7,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [ButtonComponent, InputLabelComponent],
   imports: [CommonModule, ReactiveFormsModule],
-  exports: [ButtonComponent, InputLabelComponent], // Exporting ButtonComponent to be used in other modules
+  exports: [ButtonComponent, InputLabelComponent, ReactiveFormsModule], // Exporting ButtonComponent to be used in other modules
 })
 export class SharedModule {}
