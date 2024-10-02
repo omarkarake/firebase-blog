@@ -22,7 +22,7 @@ export class AuthService {
 
   register(
     email: string,
-    username: string,
+    fullName: string,
     password: string
   ): Observable<void> {
     const promise = createUserWithEmailAndPassword(
@@ -30,7 +30,7 @@ export class AuthService {
       email,
       password
     ).then((response) =>
-      updateProfile(response.user, { displayName: username })
+      updateProfile(response.user, { displayName: fullName })
     );
     return from(promise);
   }
@@ -62,10 +62,9 @@ export class AuthService {
   }
 
   // Signup method
-  signup(email: string, password: string): Observable<any> {
-    const username = email.split('@')[0];
+  signup(email: string, fullName: string, password: string): Observable<any> {
 
-    return this.register(email, username, password).pipe(
+    return this.register(email, fullName, password).pipe(
       take(1), // Ensures the observable completes after one emission
       // Handle success and error cases within the pipe
       switchMap(() => {

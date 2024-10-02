@@ -14,27 +14,35 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { firebaseConfig } from './constants/constants';
-
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, RouterModule, SharedModule],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    RouterModule,
+    SharedModule,
+    BrowserAnimationsModule, // Required for Toastr
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
+  ],
   providers: [
     provideClientHydration(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    // provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
-    importProvidersFrom([
-      AngularFireModule.initializeApp(firebaseConfig),
-      AngularFireAuthModule,
-      AngularFireDatabaseModule,
-      AngularFirestoreModule,
-    ]),
+    // importProvidersFrom([
+    //   AngularFireModule.initializeApp(firebaseConfig),
+    //   AngularFireAuthModule,
+    //   AngularFireDatabaseModule,
+    //   AngularFirestoreModule,
+    // ]),
   ],
   bootstrap: [AppComponent],
 })

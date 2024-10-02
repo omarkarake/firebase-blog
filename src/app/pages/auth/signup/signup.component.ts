@@ -1,25 +1,44 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  Validators,
+  ValidatorFn,
+  AbstractControl,
+} from '@angular/forms';
 import { User } from '../../../models/user.model';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
+  styleUrls: ['./signup.component.css'],
 })
 export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
 
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     // Initialize the form group with form controls
-    this.signupForm = new FormGroup({
-      fullName: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      confirmPassword: new FormControl('', [Validators.required])
-    }, { validators: this.passwordMatchValidator });
+    this.signupForm = new FormGroup(
+      {
+        fullName: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [
+          Validators.required,
+          Validators.minLength(6),
+        ]),
+        confirmPassword: new FormControl('', [Validators.required]),
+      },
+      { validators: this.passwordMatchValidator }
+    );
 
     this.signupForm.valueChanges.subscribe((value) => {
       console.log('Form value:', value);
@@ -27,33 +46,49 @@ export class SignupComponent implements OnInit {
   }
 
   // Custom validator to check if password and confirm password match
-  passwordMatchValidator: ValidatorFn = (control: AbstractControl): { [key: string]: any } | null => {
+  passwordMatchValidator: ValidatorFn = (
+    control: AbstractControl
+  ): { [key: string]: any } | null => {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
-    
+
     // Only validate if both fields have values
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
+    if (
+      password &&
+      confirmPassword &&
+      password.value !== confirmPassword.value
+    ) {
       // Set the error on the confirmPassword control
       confirmPassword.setErrors({ passwordMismatch: true });
       return { passwordMismatch: true };
     }
-    
+
     // Clear the error from confirmPassword if passwords match
     if (confirmPassword?.hasError('passwordMismatch')) {
       confirmPassword.setErrors(null);
     }
-    
+
     return null;
   };
 
   // Submit function
   onSubmit(): void {
     if (this.signupForm.valid) {
-      const { fullName, email, password }: User = this.signupForm.value;
-      console.log('Form value:', this.signupForm.value);
+      const { email, fullName, password }: User = this.signupForm.value;
+
+      // Use the new signup method in AuthService
+      this.authService.signup(email, fullName, password).subscribe((res) => {
+        if (res.success) {
+          console.log('Signup successful');
+          this.toastr.success('Signup successful');
+          this.router.navigate(['/auth/login']); // Redirect to login after successful signup
+        } else {
+          console.log('Signup failed:', res.message);
+          this.toastr.error('Signup failed:', res.message);
+        }
+      });
     } else {
       this.logValidationErrors();
-      console.log('Form is invalid');
     }
   }
 
