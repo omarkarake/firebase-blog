@@ -11,7 +11,7 @@
         Blogify firebase
       </a>
       <div class="w-full bg-white rounded-lg shadow">
-        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <div class="p-6 space-y-4 md:space-y-6 lg:space-y-4 sm:p-8">
           <h1
             class="text-xl font-bold leading-tight tracking-tight text-secondary-900 md:text-2xl"
           >
@@ -22,7 +22,7 @@
           <form
             [formGroup]="loginForm"
             (ngSubmit)="onSubmit()"
-            class="space-y-4 md:space-y-6"
+            class="space-y-4 md:space-y-6 lg:space-y-4"
           >
             <!-- Email Input -->
             <div>
@@ -44,10 +44,10 @@
             </div>
 
             <!-- Submit Button -->
-            <div class="py-2" *ngIf="!loading">
+            <div *ngIf="!loading">
               <app-button text="Sign in"></app-button>
             </div>
-            <div class="py-2 flex justify-center">
+            <div class="flex justify-center">
               <div *ngIf="loading" class="loader"></div>
             </div>
 
