@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AbstractControl, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-input-label',
@@ -9,6 +9,7 @@ import { FormControl } from '@angular/forms';
 export class InputLabelComponent {
   @Input() placeholder: string = 'Type here...'; // Placeholder for the input
   @Input() control: FormControl = new FormControl(''); // Reactive form control
+  @Input() formGroup?: AbstractControl; // Optional input for passing form group
   @Input() type: string = 'text'; // Input type
   @Input() label: string = 'label here...'; // Input type
 
@@ -69,7 +70,7 @@ export class InputLabelComponent {
   // Getter to show the appropriate error message
   getErrorMessage(): string {
     if (this.control.hasError('required')) {
-      return 'Can’t be empty';
+      return 'Can\'t be empty';
     } else if (this.control.hasError('email')) {
       return 'Invalid email address';
     } else if (this.control.hasError('minlength')) {

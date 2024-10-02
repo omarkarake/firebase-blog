@@ -17,48 +17,66 @@
           >
             Create your account
           </h1>
-          <form class="space-y-4 md:space-y-6" action="#">
+
+          <!-- Signup Form -->
+          <form
+            [formGroup]="signupForm"
+            (ngSubmit)="onSubmit()"
+            class="space-y-4 md:space-y-6"
+          >
             <!-- Full Name Field -->
             <div>
               <app-input-label
                 label="Full Name"
                 placeholder="John Doe"
+                [control]="fullNameControl"
               ></app-input-label>
             </div>
+
             <!-- Email Field -->
             <div>
               <app-input-label
                 label="Your email"
                 placeholder="name@company.com"
+                [control]="emailControl"
               ></app-input-label>
             </div>
+
             <!-- Password Field -->
             <div>
               <app-input-label
                 label="Password"
                 placeholder="••••••••"
+                [control]="passwordControl"
+                [type]="'password'"
               ></app-input-label>
             </div>
+
             <!-- Confirm Password Field -->
             <div>
               <app-input-label
                 label="Confirm Password"
                 placeholder="••••••••"
+                [control]="confirmPasswordControl"
+                [type]="'password'"
+                [formGroup]="signupForm"
               ></app-input-label>
             </div>
-            <!-- Sign Up Button -->
+
+            <!-- Submit Button -->
             <div class="py-2">
-              <app-button text="Sign up"></app-button>
+                <app-button text="Sign up"></app-button>
             </div>
-            <!-- Existing Account Link -->
+
+            <!-- Already have an account -->
             <p class="text-sm font-light text-secondary-500">
               Already have an account?
               <a
-                href="#"
                 class="font-medium text-primary-600 hover:underline"
                 routerLink="/auth/login"
-                >Sign in</a
               >
+                Sign in
+              </a>
             </p>
           </form>
         </div>
