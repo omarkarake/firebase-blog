@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
+  loading: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -73,6 +74,9 @@ export class SignupComponent implements OnInit {
 
   // Submit function
   onSubmit(): void {
+    this.loading = true;
+    // Mark all fields as touched to trigger validation
+    this.markFormGroupTouched(this.signupForm);
     if (this.signupForm.valid) {
       const { email, fullName, password }: User = this.signupForm.value;
 
@@ -81,14 +85,17 @@ export class SignupComponent implements OnInit {
         if (res.success) {
           console.log('Signup successful');
           this.toastr.success('Signup successful');
+          this.loading = false;
           this.router.navigate(['/auth/login']); // Redirect to login after successful signup
         } else {
           console.log('Signup failed:', res.message);
           this.toastr.error('Signup failed:', res.message);
+          this.loading = false;
         }
       });
     } else {
       this.logValidationErrors();
+      this.loading = false;
     }
   }
 
@@ -119,5 +126,17 @@ export class SignupComponent implements OnInit {
 
   get confirmPasswordControl(): FormControl {
     return this.signupForm.get('confirmPassword') as FormControl;
+  }
+
+  // Method to mark all controls as touched
+  markFormGroupTouched(formGroup: FormGroup): void {
+    Object.keys(formGroup.controls).forEach((key) => {
+      const control = formGroup.get(key);
+      if (control instanceof FormControl) {
+        control.markAsTouched();
+      } else if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
 }
