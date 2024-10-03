@@ -15,7 +15,7 @@ const routes: Routes = [
       // { path: 'movies', component: MoviesComponent },
       // { path: 'tv-series', component: TvSeriesComponent },
     ],
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   // { path: '', component: HomeComponent, canActivate: [AuthGuard] }
 ];

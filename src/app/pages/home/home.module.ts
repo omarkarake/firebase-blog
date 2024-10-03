@@ -3,15 +3,23 @@ import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { MainComponent } from './main/main.component';
+import { HeaderComponent } from './layout/header/header.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { HeroContentComponent } from './layout/hero-content/hero-content.component';
+import { SharedModule } from "../../modules/shared/shared.module";
 
 
 @NgModule({
   declarations: [
-    MainComponent
+    MainComponent,
+    HeaderComponent,
+    FooterComponent,
+    HeroContentComponent
   ],
   imports: [
     CommonModule,
-    HomeRoutingModule
-  ]
+    HomeRoutingModule,
+    SharedModule
+]
 })
 export class HomeModule { }
