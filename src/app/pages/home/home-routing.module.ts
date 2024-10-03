@@ -2,16 +2,18 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainComponent } from './main/main.component';
 import { AuthGuard } from '../auth/auth.guard';
+import { HomeComponent } from './home.component';
+import { DetailComponent } from './detail/detail.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: MainComponent,
+    component: HomeComponent,
     // resolve: { mediaItems: HomeResolver },
     children: [
       { path: '', redirectTo: 'main', pathMatch: 'full' },
       { path: 'main', component: MainComponent },
-      // { path: 'bookmarked', component: BookmarkedComponent },
+      { path: 'detail', component: DetailComponent },
       // { path: 'movies', component: MoviesComponent },
       // { path: 'tv-series', component: TvSeriesComponent },
     ],
