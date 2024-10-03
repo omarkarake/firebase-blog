@@ -10,7 +10,7 @@ import { SharedModule } from "../../modules/shared/shared.module";
 import { HomeComponent } from './home.component';
 import { DetailComponent } from './detail/detail.component';
 import { ProfileComponent } from './profile/profile.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -27,7 +27,7 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     HomeRoutingModule,
     SharedModule,
-    FormsModule
+    ReactiveFormsModule,
 ]
 })
 export class HomeModule { }

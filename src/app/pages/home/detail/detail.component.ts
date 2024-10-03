@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-detail',
@@ -7,13 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetailComponent implements OnInit {
   blog: any;
-  newComment: any = {
-    author: '',
-    content: '',
-    date: new Date()
-  };
+  commentForm!: FormGroup;
 
-  constructor() {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     // Mock blog data
@@ -36,12 +33,22 @@ export class DetailComponent implements OnInit {
         }
       ]
     };
+
+    // Initialize the reactive form
+    this.commentForm = this.fb.group({
+      author: ['', [Validators.required, Validators.minLength(2)]],
+      content: ['', [Validators.required, Validators.minLength(5)]]
+    });
   }
 
   addComment(): void {
-    this.newComment.date = new Date();
-    this.blog.comments.push({ ...this.newComment });
-    this.newComment.author = '';
-    this.newComment.content = '';
+    if (this.commentForm.valid) {
+      const newComment = {
+        ...this.commentForm.value,
+        date: new Date()
+      };
+      this.blog.comments.push(newComment);
+      this.commentForm.reset();
+    }
   }
 }
