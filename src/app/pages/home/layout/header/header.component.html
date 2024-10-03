@@ -28,7 +28,9 @@
     </div>
   </div>
   <div class="flex items-center justify-between gap-4">
-    <app-button text="Add post"></app-button>
+    <div (click)="addPost()">
+      <app-button text="Add post"></app-button>
+    </div>
 
     <!-- Avatar with dropdown -->
     <div

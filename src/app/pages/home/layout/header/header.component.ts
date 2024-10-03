@@ -1,5 +1,6 @@
 import { Component, HostListener, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalService } from '../../../../services/modal/modal.service';
 
 @Component({
   selector: 'app-header',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
   isDropdownOpen = false;
 
-  constructor(private renderer: Renderer2, private router: Router) {
+  constructor(private renderer: Renderer2, private router: Router, private modalService: ModalService) {
     // Listen for clicks outside the dropdown to close it
     this.renderer.listen('window', 'click', (event: Event) => {
       const target = event.target as HTMLElement | null;
@@ -30,5 +31,9 @@ export class HeaderComponent {
 
   logout() {
     this.router.navigate(['/auth/login']);
+  }
+
+  addPost(){
+    this.modalService.openModal('addPost');
   }
 }
