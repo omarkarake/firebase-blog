@@ -1,1 +1,35 @@
-<p>detail works!</p>
+<div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div class="mb-6">
+      <div><img [src]="blog.image" alt="{{ blog.title }}" class="w-full h-[400px] rounded-lg"></div>
+      <h1 class="text-3xl font-bold mt-4">{{ blog.title }}</h1>
+      <div class="text-gray-600 mt-2">
+        <span class="mr-4">By {{ blog.author }}</span>
+        <span>{{ blog.date | date }}</span>
+      </div>
+    </div>
+    <div class="prose">
+      <p>{{ blog.content }}</p>
+    </div>
+    <div class="mt-8">
+      <h2 class="text-2xl font-semibold mb-4">Comments</h2>
+      <div *ngFor="let comment of blog.comments" class="mb-6 p-4 bg-gray-100 rounded-lg">
+        <p class="font-semibold">{{ comment.author }}</p>
+        <p class="text-gray-500 text-sm">{{ comment.date | date }}</p>
+        <p class="mt-2">{{ comment.content }}</p>
+      </div>
+      <div class="mt-8">
+        <h3 class="text-xl font-semibold mb-4">Add a Comment</h3>
+        <form (ngSubmit)="addComment()" class="space-y-4">
+          <div>
+            <label for="author" class="block text-sm font-medium text-gray-700">Name:</label>
+            <input id="author" [(ngModel)]="newComment.author" name="author" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm">
+          </div>
+          <div>
+            <label for="content" class="block text-sm font-medium text-gray-700">Comment:</label>
+            <textarea id="content" [(ngModel)]="newComment.content" name="content" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"></textarea>
+          </div>
+          <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>

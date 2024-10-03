@@ -10,6 +10,7 @@ import { SharedModule } from "../../modules/shared/shared.module";
 import { HomeComponent } from './home.component';
 import { DetailComponent } from './detail/detail.component';
 import { ProfileComponent } from './profile/profile.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { ProfileComponent } from './profile/profile.component';
   imports: [
     CommonModule,
     HomeRoutingModule,
-    SharedModule
+    SharedModule,
+    FormsModule
 ]
 })
 export class HomeModule { }
