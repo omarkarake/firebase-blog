@@ -1,4 +1,6 @@
-<div class="py-4 md:py-3 lg:py-2 px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-0">
+<div
+  class="py-4 md:py-3 lg:py-2 px-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-0"
+>
   <div class="flex items-center justify-between gap-[55px]">
     <div class="flex items-center gap-[55px]">
       <a
@@ -6,18 +8,60 @@
         class="flex items-center text-2xl font-semibold text-secondary-900"
       >
         <img class="w-8 h-8 mr-2" src="assets/logo.svg" alt="logo" />
-        <p class="text-sm md:text-lg lg:text-2xl">BLOGIFY <span class="hidden md:inline-block">FIREBASE</span></p>
+        <p class="text-sm md:text-lg lg:text-2xl">
+          BLOGIFY <span class="hidden md:inline-block">FIREBASE</span>
+        </p>
       </a>
     </div>
     <div class="md:w-auto flex items-center pt-1">
       <div class="flex items-center gap-4">
-        <p class="text-sm font-bold text-primary-500 cursor-pointer">Home</p>
-        <p class="text-sm font-normal cursor-pointer">details</p>
+        <p
+          routerLink="/main"
+          class="text-sm font-bold text-primary-500 cursor-pointer"
+        >
+          Home
+        </p>
+        <p routerLink="/main/detail" class="text-sm font-normal cursor-pointer">
+          details
+        </p>
       </div>
     </div>
   </div>
-  <div class="flex items-center gap-4">
+  <div class="flex items-center justify-between gap-4">
     <app-button text="Add post"></app-button>
-    <div class="cursor-pointer"><img src="assets/search.svg" alt="search" /></div>
+
+    <!-- Avatar with dropdown -->
+    <div
+      class="relative cursor-pointer w-10 h-10"
+      (click)="toggleDropdown($event)"
+    >
+      <img src="assets/avatar.svg" alt="avatar" />
+
+      <!-- Dropdown menu -->
+      <div
+        *ngIf="isDropdownOpen"
+        class="absolute p-2 right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
+      >
+        <div class="flex items-center border-b-[1px] border-primary-500">
+          <div>
+            <img src="assets/avatar.svg" alt="avatar" class="w-14 h-14" />
+          </div>
+          <div class="ml-2 overflow-hidden">
+            <p class="font-bold">Omar</p>
+            <p class="font-light truncate w-full" title="omar@gmail.com">
+              omar&#64;gmail.com
+            </p>
+          </div>
+        </div>
+        <ul class="py-2">
+          <li routerLink="/main/profile" class="px-4 py-2 hover:bg-gray-100">
+            <a>Profile Settings</a>
+          </li>
+          <li class="px-4 py-2 hover:bg-gray-100" (click)="logout()">
+            <a>Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
