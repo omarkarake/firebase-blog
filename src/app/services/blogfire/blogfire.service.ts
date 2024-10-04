@@ -1,29 +1,26 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collectionData, Firestore } from '@angular/fire/firestore';
+import { addDoc, collectionData, Firestore, updateDoc, doc } from '@angular/fire/firestore';
 import { collection } from 'firebase/firestore';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { Blog } from '../../models/blog.model';
 import { Comment } from '../../models/comment.model';
-import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BlogfireService {
   private commentsSubject = new BehaviorSubject<Comment[]>([]);
-  comments$ = this.commentsSubject.asObservable(); // Expose the observable
+  comments$ = this.commentsSubject.asObservable();
 
   constructor(private firestore: Firestore) {}
 
   blogsCollection = collection(this.firestore, 'blogs');
   commentsCollection = collection(this.firestore, 'comments');
 
-  // Fetch all blogs (unchanged)
   getBlogsCollection(): Observable<Blog[]> {
     return collectionData(this.blogsCollection, { idField: 'id' });
   }
 
-  // Add a new blog (unchanged)
   addBlog(
     author: string,
     date: Date,
@@ -31,7 +28,7 @@ export class BlogfireService {
     image: string,
     title: string
   ) {
-    const blogToCreate = { author, date, description, image, title };
+    const blogToCreate = { author, date, description, image, title, likes: 0 }; // Initialize likes to 0
     const promise = addDoc(this.blogsCollection, blogToCreate).then(
       (response) => {
         response.id;
@@ -41,7 +38,6 @@ export class BlogfireService {
     return from(promise);
   }
 
-  // Get blog by ID (unchanged)
   getBlogById(id: string): Observable<Blog> {
     return new Observable<Blog>((observer) => {
       this.getBlogsCollection().subscribe((blogs) => {
@@ -52,28 +48,40 @@ export class BlogfireService {
     });
   }
 
-  // Fetch comments for a specific blog
   getCommentsByBlogId(blogId: string): void {
     this.getCommentsCollection().subscribe((comments) => {
       const blogComments = comments.filter(
         (comment: Comment) => comment.blog_id === blogId
       );
-      this.commentsSubject.next(blogComments); // Trigger update
+      this.commentsSubject.next(blogComments);
     });
   }
 
-  // Add a comment and trigger re-fetch of comments
   addComment(blogId: string, author: string, content: string): Observable<void> {
     const commentToCreate = { blog_id: blogId, author, content, date: new Date() };
     const promise = addDoc(this.commentsCollection, commentToCreate).then(() => {
-      // Trigger comment fetch after adding a new comment
       this.getCommentsByBlogId(blogId);
     });
 
     return from(promise);
   }
 
-  // Get all comments (unchanged)
+  // New method to increase the likes of a blog
+  increaseLikes(blogId: string, currentLikes: number): Observable<void> {
+    const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
+    const promise = updateDoc(blogDocRef, { likes: currentLikes + 1 });
+
+    return from(promise);
+  }
+
+  // New method to decrease the likes of a blog
+  decreaseLikes(blogId: string, currentLikes: number): Observable<void> {
+    const blogDocRef = doc(this.firestore, `blogs/${blogId}`);
+    const promise = updateDoc(blogDocRef, { likes: currentLikes > 0 ? currentLikes - 1 : 0 });
+
+    return from(promise);
+  }
+
   private getCommentsCollection(): Observable<Comment[]> {
     return collectionData(this.commentsCollection, { idField: 'id' }) as Observable<Comment[]>;
   }

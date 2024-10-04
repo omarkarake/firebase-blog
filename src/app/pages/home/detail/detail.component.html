@@ -1,6 +1,6 @@
 <div *ngIf="blog" class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
   <div class="flex items-center gap-2 cursor-pointer" (click)="goBack()">
-    <img src="assets/arrow-left.svg" alt="arrow-left" class="h-6">
+    <img src="assets/arrow-left.svg" alt="arrow-left" class="h-6" />
     <p class="text-primary-500 font-semibold underline">Go back</p>
   </div>
   <div class="mb-6 mt-2">
@@ -14,9 +14,33 @@
     <h1 class="text-3xl font-bold mt-4 text-secondary-900">{{ blog.title }}</h1>
     <div class="text-secondary-500 mt-2">
       <span class="mr-4">By {{ blog.author }}</span>
-      <span>{{ blog.date | timestamp:'MMMM dd, yyyy' }}</span>
+      <span>{{ blog.date | timestamp : "MMMM dd, yyyy" }}</span>
     </div>
   </div>
+
+  <!-- Like/Dislike Section -->
+  <div class="flex items-center gap-4 mt-4">
+    <!-- Dislike Button -->
+    <img
+      *ngIf="!isLiked"
+      src="assets/empty-like.svg"
+      class="h-5 cursor-pointer"
+      alt="empty-like"
+      (click)="likeBlog()"
+    />
+
+    <!-- Like Button -->
+    <img
+      *ngIf="isLiked"
+      src="assets/filled-like.svg"
+      class="h-5 cursor-pointer"
+      alt="filled-like"
+      (click)="dislikeBlog()"
+    />
+
+    <p class="text-xl font-semibold text-primary-500">{{ blog.likes }} likes</p>
+  </div>
+
   <div class="prose">
     <p>{{ blog.description }}</p>
   </div>
@@ -31,7 +55,7 @@
     >
       <p class="font-semibold text-secondary-900">{{ comment.author }}</p>
       <p class="text-sm text-secondary-500">
-        date: {{ comment.date | timestamp:'MMMM dd, yyyy' }}
+        date: {{ comment.date | timestamp : "MMMM dd, yyyy" }}
       </p>
       <p class="mt-2 text-secondary-700">{{ comment.content }}</p>
     </div>
