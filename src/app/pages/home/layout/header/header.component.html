@@ -18,6 +18,7 @@
         <!-- Home link -->
         <p
           routerLink="/main"
+          [routerLinkActive]="['font-bold', 'text-primary-500']"
           [ngClass]="{
             'font-bold text-primary-500': isActive('/main'),
             'font-normal': !isActive('/main')
