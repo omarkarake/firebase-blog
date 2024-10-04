@@ -69,6 +69,7 @@
             ? 'assets/avatar.svg'
             : currentUser.avatarUrl
         "
+        class="w-full h-full rounded-full"
         alt="avatar"
       />
 
@@ -77,8 +78,8 @@
         *ngIf="isDropdownOpen"
         class="absolute p-2 right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
       >
-        <div class="flex items-center border-b-[1px] border-primary-500">
-          <div>
+        <div class="flex h-14 overflow-hidden items-center border-b-[1px] border-primary-500">
+          <div class="flex items-center justify-center">
             <img
               [src]="
                 currentUser.avatarUrl?.length === 0
@@ -86,11 +87,11 @@
                   : currentUser.avatarUrl
               "
               alt="avatar"
-              class="w-14 h-14"
+              class="w-14 h-10 rounded-full"
             />
           </div>
           <div class="ml-2 overflow-hidden">
-            <p class="font-bold">{{ currentUser.fullName }}</p>
+            <p class="font-bold truncate">{{ currentUser.fullName }}</p>
             <p class="font-light truncate w-full" title="omar@gmail.com">
               {{ currentUser.email }}
             </p>
