@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { MainComponent } from './main/main.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { HeroContentComponent } from './layout/hero-content/hero-content.component';
-import { SharedModule } from "../../modules/shared/shared.module";
+import { SharedModule } from '../../modules/shared/shared.module';
 import { HomeComponent } from './home.component';
 import { DetailComponent } from './detail/detail.component';
 import { ProfileComponent } from './profile/profile.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 
 @NgModule({
   declarations: [
@@ -21,13 +20,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HeroContentComponent,
     HomeComponent,
     DetailComponent,
-    ProfileComponent
+    ProfileComponent,
   ],
-  imports: [
-    CommonModule,
-    HomeRoutingModule,
-    SharedModule,
-    ReactiveFormsModule,
-]
+  imports: [CommonModule, HomeRoutingModule, SharedModule, ReactiveFormsModule],
+  providers: [DatePipe], // Add DatePipe to providers
 })
-export class HomeModule { }
+export class HomeModule {}

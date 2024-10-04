@@ -15,14 +15,39 @@
     </div>
     <div class="md:w-auto flex items-center pt-1">
       <div class="flex items-center gap-4">
+        <!-- Home link -->
         <p
           routerLink="/main"
-          class="text-sm font-bold text-primary-500 cursor-pointer"
+          [ngClass]="{
+            'font-bold text-primary-500': isActive('/main'),
+            'font-normal': !isActive('/main')
+          }"
+          class="text-sm cursor-pointer"
         >
           Home
         </p>
-        <p routerLink="/main/detail/dakljflj" class="text-sm font-normal cursor-pointer">
+
+        <!-- Details link - should not be active even if matched -->
+        <p
+          [ngClass]="{
+            'font-bold text-primary-500': isActive('/main/detail'),
+            'font-normal': !isActive('/main/detail')
+          }"
+          class="text-sm cursor-pointer"
+        >
           details
+        </p>
+
+        <!-- User profile link -->
+        <p
+          routerLink="/main/profile"
+          [ngClass]="{
+            'font-bold text-primary-500': isActive('/main/profile'),
+            'font-normal': !isActive('/main/profile')
+          }"
+          class="text-sm cursor-pointer"
+        >
+          User profile
         </p>
       </div>
     </div>

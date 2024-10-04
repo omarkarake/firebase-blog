@@ -1,52 +1,101 @@
 <div *ngIf="blog" class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
   <div class="mb-6">
     <div>
-      <img [src]="blog.image" alt="{{ blog.title }}" class="w-full h-[400px] rounded-lg">
+      <img
+        [src]="blog.image"
+        alt="{{ blog.title }}"
+        class="w-full h-[400px] rounded-lg"
+      />
     </div>
     <h1 class="text-3xl font-bold mt-4 text-secondary-900">{{ blog.title }}</h1>
     <div class="text-secondary-500 mt-2">
       <span class="mr-4">By {{ blog.author }}</span>
-      <span>{{ blog.date }}</span>
+      <span>{{ blog.date | timestamp:'MMMM dd, yyyy' }}</span>
     </div>
   </div>
   <div class="prose">
     <p>{{ blog.description }}</p>
   </div>
-  
+
   <!-- Comments Section -->
   <div class="mt-8">
     <h2 class="text-2xl font-semibold mb-4 text-secondary-900">Comments</h2>
-    
-    <div *ngFor="let comment of comments$ | async" class="mb-6 p-4 bg-secondary-50 rounded-lg">
+
+    <div
+      *ngFor="let comment of comments$ | async"
+      class="mb-6 p-4 bg-secondary-50 rounded-lg"
+    >
       <p class="font-semibold text-secondary-900">{{ comment.author }}</p>
-      <p class="text-sm text-secondary-500">date: {{ comment.date }}</p>
+      <p class="text-sm text-secondary-500">
+        date: {{ comment.date | timestamp:'MMMM dd, yyyy' }}
+      </p>
       <p class="mt-2 text-secondary-700">{{ comment.content }}</p>
     </div>
 
     <!-- Add Comment Form -->
     <div class="mt-8">
-      <h3 class="text-xl font-semibold mb-4 text-secondary-900">Add a Comment</h3>
-      <form [formGroup]="commentForm" (ngSubmit)="addComment()" class="space-y-4">
+      <h3 class="text-xl font-semibold mb-4 text-secondary-900">
+        Add a Comment
+      </h3>
+      <form
+        [formGroup]="commentForm"
+        (ngSubmit)="addComment()"
+        class="space-y-4"
+      >
         <div>
-          <label for="author" class="block text-sm font-medium text-secondary-700">Name:</label>
-          <input id="author" formControlName="author" type="text" required
-                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900" />
-          <div *ngIf="commentForm.get('author')?.invalid && commentForm.get('author')?.touched" class="text-red-500 text-sm">
+          <label
+            for="author"
+            class="block text-sm font-medium text-secondary-700"
+            >Name:</label
+          >
+          <input
+            id="author"
+            formControlName="author"
+            type="text"
+            required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
+          />
+          <div
+            *ngIf="
+              commentForm.get('author')?.invalid &&
+              commentForm.get('author')?.touched
+            "
+            class="text-red-500 text-sm"
+          >
             Name is required (min 2 characters).
           </div>
         </div>
-        
+
         <div>
-          <label for="content" class="block text-sm font-medium text-secondary-700">Comment:</label>
-          <textarea id="content" formControlName="content" required
-                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"></textarea>
-          <div *ngIf="commentForm.get('content')?.invalid && commentForm.get('content')?.touched" class="text-red-500 text-sm">
+          <label
+            for="content"
+            class="block text-sm font-medium text-secondary-700"
+            >Comment:</label
+          >
+          <textarea
+            id="content"
+            formControlName="content"
+            required
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
+          ></textarea>
+          <div
+            *ngIf="
+              commentForm.get('content')?.invalid &&
+              commentForm.get('content')?.touched
+            "
+            class="text-red-500 text-sm"
+          >
             Comment is required (min 5 characters).
           </div>
         </div>
-        
-        <button type="submit" [disabled]="commentForm.invalid"
-                class="px-4 py-2 bg-primary-700 text-white rounded-md hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300">Submit</button>
+
+        <button
+          type="submit"
+          [disabled]="commentForm.invalid"
+          class="px-4 py-2 bg-primary-700 text-white rounded-md hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+        >
+          Submit
+        </button>
       </form>
     </div>
   </div>
