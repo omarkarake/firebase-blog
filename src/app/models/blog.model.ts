@@ -9,5 +9,5 @@ export interface Blog {
   author: string; // Blog post author
   description: string;
   date: Date;
-  comments: Comment[]; // Array of comments for this blog post
+  comments?: Comment[]; // Array of comments for this blog post
 }
