@@ -78,7 +78,9 @@ export class SignupComponent implements OnInit {
     // Mark all fields as touched to trigger validation
     this.markFormGroupTouched(this.signupForm);
     if (this.signupForm.valid) {
-      const { email, fullName, password }: User = this.signupForm.value;
+      const email = this.signupForm.get('email')?.value as string;
+      const fullName = this.signupForm.get('fullName')?.value as string;
+      const password = this.signupForm.get('password')?.value as string;
 
       // Use the new signup method in AuthService
       this.authService.signup(email, fullName, password).subscribe((res) => {

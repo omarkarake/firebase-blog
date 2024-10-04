@@ -41,7 +41,8 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.markFormGroupTouched(this.loginForm);
     if (this.loginForm.valid) {
-      const { email, password }: User = this.loginForm.value;
+      const email = this.loginForm.get('email')?.value as string;
+    const password = this.loginForm.get('password')?.value as string;
       this.authService.login(email, password).subscribe({
         next: (response) => {
           if (response.success) {
