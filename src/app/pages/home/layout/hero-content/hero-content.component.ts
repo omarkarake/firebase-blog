@@ -26,9 +26,9 @@ export class HeroContentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.blogs$ = this.blogfireService.getBlogsCollection();
 
-    this.blogfireService.getCommentsCollection().subscribe((comments) => {
-      console.log(comments);
-    });
+    // this.blogfireService.getCommentsCollection().subscribe((comments) => {
+    //   console.log(comments);
+    // });
   }
 
   ngOnDestroy(): void {

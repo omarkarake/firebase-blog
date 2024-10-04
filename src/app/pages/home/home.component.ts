@@ -38,9 +38,9 @@ export class HomeComponent {
       console.log(blogs);
     });
 
-    this.blogfireService.getCommentsCollection().subscribe((comments) => {
-      console.log(comments);
-    });
+    // this.blogfireService.getCommentsCollection().subscribe((comments) => {
+    //   console.log(comments);
+    // });
   }
 
   createBlog(): void {

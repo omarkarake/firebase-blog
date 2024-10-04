@@ -1,28 +1,29 @@
-// blogfire.service.ts
-
 import { Injectable } from '@angular/core';
 import { addDoc, collectionData, Firestore } from '@angular/fire/firestore';
 import { collection } from 'firebase/firestore';
-import { from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import { Blog } from '../../models/blog.model';
 import { Comment } from '../../models/comment.model';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BlogfireService {
+  private commentsSubject = new BehaviorSubject<Comment[]>([]);
+  comments$ = this.commentsSubject.asObservable(); // Expose the observable
+
   constructor(private firestore: Firestore) {}
+
   blogsCollection = collection(this.firestore, 'blogs');
   commentsCollection = collection(this.firestore, 'comments');
 
+  // Fetch all blogs (unchanged)
   getBlogsCollection(): Observable<Blog[]> {
     return collectionData(this.blogsCollection, { idField: 'id' });
   }
 
-  getCommentsCollection(): Observable<Comment[]> {
-    return collectionData(this.commentsCollection, { idField: 'id' }) as Observable<Comment[]>;
-  }
-
+  // Add a new blog (unchanged)
   addBlog(
     author: string,
     date: Date,
@@ -40,17 +41,7 @@ export class BlogfireService {
     return from(promise);
   }
 
-  addComment(blogId: string, author: string, content: string) {
-    const commentToCreate = { blog_id: blogId, author, content, date: new Date() };
-    const promise = addDoc(this.commentsCollection, commentToCreate).then(
-      (response) => {
-        response.id;
-      }
-    );
-
-    return from(promise);
-  }
-
+  // Get blog by ID (unchanged)
   getBlogById(id: string): Observable<Blog> {
     return new Observable<Blog>((observer) => {
       this.getBlogsCollection().subscribe((blogs) => {
@@ -61,15 +52,29 @@ export class BlogfireService {
     });
   }
 
-  getCommentsByBlogId(blogId: string): Observable<Comment[]> {
-    return new Observable<Comment[]>((observer) => {
-      this.getCommentsCollection().subscribe((comments) => {
-        const blogComments = comments.filter(
-          (comment: Comment) => comment.blog_id === blogId
-        );
-        observer.next(blogComments);
-        observer.complete();
-      });
+  // Fetch comments for a specific blog
+  getCommentsByBlogId(blogId: string): void {
+    this.getCommentsCollection().subscribe((comments) => {
+      const blogComments = comments.filter(
+        (comment: Comment) => comment.blog_id === blogId
+      );
+      this.commentsSubject.next(blogComments); // Trigger update
     });
+  }
+
+  // Add a comment and trigger re-fetch of comments
+  addComment(blogId: string, author: string, content: string): Observable<void> {
+    const commentToCreate = { blog_id: blogId, author, content, date: new Date() };
+    const promise = addDoc(this.commentsCollection, commentToCreate).then(() => {
+      // Trigger comment fetch after adding a new comment
+      this.getCommentsByBlogId(blogId);
+    });
+
+    return from(promise);
+  }
+
+  // Get all comments (unchanged)
+  private getCommentsCollection(): Observable<Comment[]> {
+    return collectionData(this.commentsCollection, { idField: 'id' }) as Observable<Comment[]>;
   }
 }
