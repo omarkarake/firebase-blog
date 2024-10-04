@@ -6,6 +6,7 @@ import { Blog } from '../../../models/blog.model';
 import { Timestamp } from 'firebase/firestore';
 import { Comment } from '../../../models/comment.model';
 import { Observable } from 'rxjs';
+import { Location } from '@angular/common'; // Import Location
 
 @Component({
   selector: 'app-detail',
@@ -21,7 +22,8 @@ export class DetailComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private blogfireService: BlogfireService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location // Inject Location service
   ) {}
 
   ngOnInit(): void {
@@ -60,5 +62,10 @@ export class DetailComponent implements OnInit {
     } else {
       console.log('Form is invalid');
     }
+  }
+
+  // Add a method to go back
+  goBack(): void {
+    this.location.back();
   }
 }
