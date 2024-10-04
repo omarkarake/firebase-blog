@@ -1,8 +1,9 @@
 <div
   class="max-w-sm bg-white border cursor-pointer border-secondary-300 rounded-lg shadow h-full flex flex-col"
+  (click)="goToDetail(id)"
 >
-  <div class="bg-red-400">
-    <img class="rounded-t-lg w-full h-[300px]" [src]="image" alt="" />
+  <div class="">
+    <img class="rounded-t-lg w-full h-[300px]" [src]="image" [alt]="title" />
   </div>
   <div class="p-5 flex-grow flex flex-col justify-between">
     <div>

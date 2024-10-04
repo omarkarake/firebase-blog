@@ -2,8 +2,9 @@
 import { User } from './user.model';
 
 export interface Comment {
-  id: number;
-  author: User; // Author is a User model
+  id: string;
+  blog_id: string; // ID of the blog post this comment belongs to
+  author: string; // Author is a User model
   content: string;
   date: Date;
 }
