@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
 
   loginWithGoogle(): void {
     this.loading = true;
-    this.authService.createAcountWithGoogle().subscribe({
+    this.authService.createAccountWithGoogle().subscribe({
       next: () => {
         this.loading = false;
         this.router.navigateByUrl('/main');

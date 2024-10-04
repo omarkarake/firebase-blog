@@ -63,7 +63,14 @@
       class="relative cursor-pointer w-10 h-10"
       (click)="toggleDropdown($event)"
     >
-      <img src="assets/avatar.svg" alt="avatar" />
+      <img
+        [src]="
+          currentUser.avatarUrl?.length === 0
+            ? 'assets/avatar.svg'
+            : currentUser.avatarUrl
+        "
+        alt="avatar"
+      />
 
       <!-- Dropdown menu -->
       <div
@@ -72,12 +79,20 @@
       >
         <div class="flex items-center border-b-[1px] border-primary-500">
           <div>
-            <img src="assets/avatar.svg" alt="avatar" class="w-14 h-14" />
+            <img
+              [src]="
+                currentUser.avatarUrl?.length === 0
+                  ? 'assets/avatar.svg'
+                  : currentUser.avatarUrl
+              "
+              alt="avatar"
+              class="w-14 h-14"
+            />
           </div>
           <div class="ml-2 overflow-hidden">
-            <p class="font-bold">Omar</p>
+            <p class="font-bold">{{ currentUser.fullName }}</p>
             <p class="font-light truncate w-full" title="omar@gmail.com">
-              omar&#64;gmail.com
+              {{ currentUser.email }}
             </p>
           </div>
         </div>
