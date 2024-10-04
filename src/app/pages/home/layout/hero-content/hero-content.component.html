@@ -39,9 +39,11 @@
   #cardSection
   class="p-4 lg:px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
 >
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
+  <app-card
+    *ngFor="let blog of blogs$ | async"
+    [title]="blog.title"
+    [description]="blog.description"
+    [image]="blog.image"
+    [id]="blog.id"
+  ></app-card>
 </section>

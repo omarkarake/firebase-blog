@@ -1,20 +1,23 @@
-<div class="max-w-sm bg-white border border-secondary-300 rounded-lg shadow">
-  <a href="#">
-    <img class="rounded-t-lg" src="assets/hacker.jpg" alt="" />
-  </a>
-  <div class="p-5">
-    <a href="#">
-      <h5 class="mb-2 text-2xl font-bold tracking-tight text-secondary-900">
-        Noteworthy technology acquisitions 2021
+<div
+  class="max-w-sm bg-white border cursor-pointer border-secondary-300 rounded-lg shadow h-full flex flex-col"
+>
+  <div class="bg-red-400">
+    <img class="rounded-t-lg w-full h-[300px]" [src]="image" alt="" />
+  </div>
+  <div class="p-5 flex-grow flex flex-col justify-between">
+    <div>
+      <h5
+        class="mb-2 text-2xl font-bold tracking-tight text-secondary-900 truncate"
+      >
+        {{ title }}
       </h5>
-    </a>
-    <p class="mb-3 font-normal text-secondary-500">
-      Here are the biggest enterprise technology acquisitions of 2021 so far, in
-      reverse chronological order.
-    </p>
+      <p class="mb-3 font-normal text-secondary-500 truncate">
+        {{ description }}
+      </p>
+    </div>
     <a
-      href="#"
-      class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300"
+      router="#"
+      class="inline-flex items-center cursor-pointer px-3 py-2 text-sm font-medium text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300"
     >
       Read more
       <svg
