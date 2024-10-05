@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collectionData, Firestore, updateDoc, doc } from '@angular/fire/firestore';
-import { collection, deleteDoc } from 'firebase/firestore';
+import { collection, deleteDoc, setDoc } from 'firebase/firestore';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { Blog } from '../../models/blog.model';
 import { Comment } from '../../models/comment.model';
@@ -90,5 +90,12 @@ export class BlogfireService {
 
   private getCommentsCollection(): Observable<Comment[]> {
     return collectionData(this.commentsCollection, { idField: 'id' }) as Observable<Comment[]>;
+  }
+
+  updateBlog(blog_id: string, dataToUpdate: {author: string, image: string, description: string, title: string}): Observable<void>{
+    const docRef = doc(this.firestore, `blogs/${blog_id}`);
+    const promise = setDoc(docRef, dataToUpdate, { merge: true });// Using merge to avoid overwriting the entire document
+    // const promise = setDoc(docRef, dataToUpdate);
+    return from(promise);
   }
 }

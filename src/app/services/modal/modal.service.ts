@@ -27,4 +27,9 @@ export class ModalService {
   closeModal() {
     this.modalState.next(null);
   }
+
+  // rerender the detail page after editing
+  // rerenderDetailPage() {
+  //   this.idTobeEdited.next(null);
+  // }
 }

@@ -38,7 +38,7 @@ export class HomeComponent {
     this.modalService.modalState$.subscribe((modalName) => {
       this.currentModal = modalName;
       this.isEditMode = modalName === 'updatePost';
-      
+
       // Reset form when modal closes
       if (!modalName) {
         this.resetForm();
@@ -68,7 +68,7 @@ export class HomeComponent {
           title: blog.title,
           image: blog.image,
           author: blog.author,
-          description: blog.description
+          description: blog.description,
           // Note: We're not updating the date field as it should remain the original
         });
       },
@@ -83,26 +83,24 @@ export class HomeComponent {
     if (this.blogForm.valid) {
       const formData = this.blogForm.value;
       console.log('Form data:', formData);
-      
+
       if (this.isEditMode && this.idToUpdate) {
         // Update existing blog
-        // this.blogfireService.updateBlog(
-        //   this.idToUpdate,
-        //   formData.title,
-        //   formData.image,
-        //   formData.author,
-        //   formData.description
-        // ).subscribe(
-        //   () => {
-        //     this.toastr.success('Blog updated successfully');
-        //     this.closeModal();
-        //     // Optionally refresh the page or update the blog list
-        //   },
-        //   (error) => {
-        //     this.toastr.error('Error updating blog');
-        //     console.error('Update error:', error);
-        //   }
-        // );
+        const { title, image, author, description } = this.blogForm.value;
+
+        this.blogfireService
+          .updateBlog(this.idToUpdate, { title, image, author, description })
+          .subscribe(
+            () => {
+              this.toastr.success('Blog updated successfully');
+              this.closeModal();
+              // Optionally refresh the page or update the blog list
+            },
+            (error) => {
+              this.toastr.error('Error updating blog');
+              console.error('Update error:', error);
+            }
+          );
       } else {
         // Create new blog
         this.createBlog();
@@ -134,7 +132,7 @@ export class HomeComponent {
   private resetForm(): void {
     this.blogForm.reset();
     this.blogForm.patchValue({
-      date: new Date()
+      date: new Date(),
     });
     this.idToUpdate = null;
     this.isEditMode = false;
@@ -159,11 +157,11 @@ export class HomeComponent {
     });
   }
 
-  toggleModal(){
+  toggleModal() {
     this.modalService.closeModal();
   }
 
-  acceptTerms(){
+  acceptTerms() {
     this.modalService.closeModal();
   }
 }
