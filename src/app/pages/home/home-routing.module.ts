@@ -10,17 +10,14 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    // resolve: { mediaItems: HomeResolver },
     children: [
       { path: '', redirectTo: 'main', pathMatch: 'full' },
       { path: 'main', component: MainComponent },
       { path: 'detail/:id', component: DetailComponent },
       { path: 'profile', component: ProfileComponent },
-      // { path: 'tv-series', component: TvSeriesComponent },
     ],
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
-  // { path: '', component: HomeComponent, canActivate: [AuthGuard] }
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

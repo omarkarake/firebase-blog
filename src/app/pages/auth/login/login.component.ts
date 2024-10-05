@@ -29,11 +29,6 @@ export class LoginComponent implements OnInit {
         Validators.minLength(6),
       ]),
     });
-
-    // Subscribe to form changes and log the value
-    this.loginForm.valueChanges.subscribe((value) => {
-      console.log('Form value:', value);
-    });
   }
 
   // Submit function
@@ -60,7 +55,6 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         },
       });
-      console.log('Form value:', this.loginForm.value);
     } else {
       this.loading = false;
       this.logValidationErrors();

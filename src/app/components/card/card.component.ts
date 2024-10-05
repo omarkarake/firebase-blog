@@ -16,6 +16,5 @@ export class CardComponent {
 
   goToDetail(id: string): void {
     this.router.navigate(['/main/detail/', id]);
-    console.log('Navigating to detail page with ID:', id);
   }
 }

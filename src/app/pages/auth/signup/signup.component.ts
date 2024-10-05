@@ -40,10 +40,6 @@ export class SignupComponent implements OnInit {
       },
       { validators: this.passwordMatchValidator }
     );
-
-    this.signupForm.valueChanges.subscribe((value) => {
-      console.log('Form value:', value);
-    });
   }
 
   // Custom validator to check if password and confirm password match
