@@ -71,9 +71,9 @@
   </div>
 </div>
 
-<!-- Conditional rendering for add Blog modal -->
+<!-- Modal for both Add and Update Blog -->
 <div
-  *ngIf="currentModal === 'addPost'"
+  *ngIf="currentModal === 'addPost' || currentModal === 'updatePost'"
   tabindex="-1"
   aria-hidden="true"
   class="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden flex justify-center items-center w-full h-screen bg-black bg-opacity-50"
@@ -82,7 +82,9 @@
     <!-- Modal content -->
     <div class="relative bg-white rounded-lg shadow">
       <div class="flex items-center justify-between p-4 border-b rounded-t">
-        <h3 class="text-xl font-semibold text-gray-900">Adding Blog</h3>
+        <h3 class="text-xl font-semibold text-gray-900">
+          {{ isEditMode ? 'Update Blog' : 'Add Blog' }}
+        </h3>
         <button
           (click)="closeModal()"
           type="button"
@@ -106,140 +108,104 @@
           <span class="sr-only">Close modal</span>
         </button>
       </div>
-        <div class="max-w-4xl mx-auto py-3 px-6 bg-white shadow-md rounded-lg">
-          <form
-            [formGroup]="blogForm"
-            (ngSubmit)="createBlog()"
-            class="space-y-6"
-          >
-            <!-- Title -->
-            <div>
-              <label
-                for="title"
-                class="block text-sm font-medium text-secondary-700"
-                >Title:</label
-              >
-              <input
-                id="title"
-                type="text"
-                formControlName="title"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
-                required
-              />
-              <div
-                *ngIf="
-                  blogForm.get('title')?.invalid &&
-                  blogForm.get('title')?.touched
-                "
-                class="text-red-500 text-sm"
-              >
-                Title is required (min 5 characters).
-              </div>
+      <div class="max-w-4xl mx-auto py-3 px-6 bg-white shadow-md rounded-lg">
+        <form [formGroup]="blogForm" (ngSubmit)="onSubmit()" class="space-y-6">
+          <!-- Form fields remain the same -->
+          <!-- Title -->
+          <div>
+            <label for="title" class="block text-sm font-medium text-secondary-700">Title:</label>
+            <input
+              id="title"
+              type="text"
+              formControlName="title"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
+              required
+            />
+            <div
+              *ngIf="blogForm.get('title')?.invalid && blogForm.get('title')?.touched"
+              class="text-red-500 text-sm"
+            >
+              Title is required (min 5 characters).
             </div>
+          </div>
 
-            <!-- Image URL -->
-            <div>
-              <label
-                for="image"
-                class="block text-sm font-medium text-secondary-700"
-                >Image URL:</label
-              >
-              <input
-                id="image"
-                type="text"
-                formControlName="image"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
-                required
-              />
-              <div
-                *ngIf="
-                  blogForm.get('image')?.invalid &&
-                  blogForm.get('image')?.touched
-                "
-                class="text-red-500 text-sm"
-              >
-                Image URL is required.
-              </div>
+          <!-- Image URL -->
+          <div>
+            <label for="image" class="block text-sm font-medium text-secondary-700">Image URL:</label>
+            <input
+              id="image"
+              type="text"
+              formControlName="image"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
+              required
+            />
+            <div
+              *ngIf="blogForm.get('image')?.invalid && blogForm.get('image')?.touched"
+              class="text-red-500 text-sm"
+            >
+              Image URL is required.
             </div>
+          </div>
 
-            <!-- Author -->
-            <div>
-              <label
-                for="author"
-                class="block text-sm font-medium text-secondary-700"
-                >Author:</label
-              >
-              <input
-                id="author"
-                type="text"
-                formControlName="author"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
-                required
-              />
-              <div
-                *ngIf="
-                  blogForm.get('author')?.invalid &&
-                  blogForm.get('author')?.touched
-                "
-                class="text-red-500 text-sm"
-              >
-                Author is required (min 2 characters).
-              </div>
+          <!-- Author -->
+          <div>
+            <label for="author" class="block text-sm font-medium text-secondary-700">Author:</label>
+            <input
+              id="author"
+              type="text"
+              formControlName="author"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
+              required
+            />
+            <div
+              *ngIf="blogForm.get('author')?.invalid && blogForm.get('author')?.touched"
+              class="text-red-500 text-sm"
+            >
+              Author is required (min 2 characters).
             </div>
+          </div>
 
-            <!-- Description -->
-            <div>
-              <label
-                for="description"
-                class="block text-sm font-medium text-secondary-700"
-                >Description:</label
-              >
-              <textarea
-                id="description"
-                formControlName="description"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
-                required
-              ></textarea>
-              <div
-                *ngIf="
-                  blogForm.get('description')?.invalid &&
-                  blogForm.get('description')?.touched
-                "
-                class="text-red-500 text-sm"
-              >
-                Description is required (min 10 characters).
-              </div>
+          <!-- Description -->
+          <div>
+            <label for="description" class="block text-sm font-medium text-secondary-700">Description:</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
+              required
+            ></textarea>
+            <div
+              *ngIf="blogForm.get('description')?.invalid && blogForm.get('description')?.touched"
+              class="text-red-500 text-sm"
+            >
+              Description is required (min 10 characters).
             </div>
+          </div>
 
-            <!-- Date (Read-only) -->
-            <div>
-              <label
-                for="date"
-                class="block text-sm font-medium text-secondary-700"
-                >Date:</label
-              >
-              <input
-                id="date"
-                type="text"
-                formControlName="date"
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
-                readonly
-              />
-            </div>
+          <!-- Date (Read-only) -->
+          <div *ngIf="!isEditMode">
+            <label for="date" class="block text-sm font-medium text-secondary-700">Date:</label>
+            <input
+              id="date"
+              type="text"
+              formControlName="date"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm text-secondary-900"
+              readonly
+            />
+          </div>
 
-            <!-- Submit Button -->
-            <div class="pt-5">
-              <button
-                type="submit"
-                [disabled]="blogForm.invalid"
-                class="px-4 py-2 bg-primary-700 text-white rounded-md hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
-              >
-                Create Blog
-              </button>
-            </div>
-          </form>
-        </div>
-
+          <!-- Submit Button -->
+          <div class="pt-5">
+            <button
+              type="submit"
+              [disabled]="blogForm.invalid"
+              class="px-4 py-2 bg-primary-700 text-white rounded-md hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300"
+            >
+              {{ isEditMode ? 'Update Blog' : 'Create Blog' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>
@@ -285,61 +251,6 @@
       <div class="flex items-center p-4 border-t border-gray-200 rounded-b">
         <button
           (click)="deleteBlog()"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-        >
-          I accept
-        </button>
-        <button
-          (click)="toggleModal()"
-          class="py-2.5 px-5 ml-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100"
-        >
-          Decline
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Conditional rendering for updating post modal -->
-<div
-  *ngIf="currentModal === 'updatePost'"
-  tabindex="-1"
-  aria-hidden="true"
-  class="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden flex justify-center items-center w-full h-screen bg-black bg-opacity-50"
->
-  <div class="relative p-4 w-full max-w-2xl max-h-full">
-    <!-- Modal content -->
-    <div class="relative bg-white rounded-lg shadow">
-      <div class="flex items-center justify-between p-4 border-b rounded-t">
-        <h3 class="text-xl font-semibold text-gray-900">Updating Post</h3>
-        <button
-          (click)="closeModal()"
-          type="button"
-          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
-        >
-          <svg
-            class="w-3 h-3"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 14"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-            />
-          </svg>
-          <span class="sr-only">Close modal</span>
-        </button>
-      </div>
-      <div class="p-4">
-        <p>Are you sure to delete this blog?</p>
-      </div>
-      <div class="flex items-center p-4 border-t border-gray-200 rounded-b">
-        <button
-          (click)="updateBlog()"
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
         >
           I accept

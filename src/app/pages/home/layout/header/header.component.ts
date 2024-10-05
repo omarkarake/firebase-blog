@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { NavigationEnd, Router, ActivatedRoute } from '@angular/router';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { ModalService } from '../../../../services/modal/modal.service';
 import { User } from '../../../../models/user.model';
 import { AuthService } from '../../../../services/auth.service';
@@ -14,10 +14,12 @@ export class HeaderComponent implements OnInit {
   isDropdownOpen = false;
   activeRoute: string = '';
   currentUser!: User;
+  currentRouteId: string | null = null;
 
   constructor(
     private renderer: Renderer2,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private modalService: ModalService,
     private authService: AuthService
   ) {
@@ -34,7 +36,28 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Listen to route changes and set the activeRoute
+    // Subscribe to route changes and parameters
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => this.activatedRoute),
+      map(route => {
+        while (route.firstChild) {
+          route = route.firstChild;
+        }
+        return route;
+      }),
+      mergeMap(route => route.params)
+    ).subscribe(params => {
+      if (params['id']) {
+        // console.log('Route ID:', params['id']);
+        this.currentRouteId = params['id'];
+        this.modalService.idTobeEdited.next(params['id']);
+      } else {
+        this.currentRouteId = null;
+      }
+    });
+
+    // Listen to route changes for active route tracking
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
@@ -59,6 +82,12 @@ export class HeaderComponent implements OnInit {
     if (route === '/main/main' && this.activeRoute === '/main') {
       return true;
     }
+    
+    // For detail routes, match only the base path without the ID
+    if (route === '/main/detail' && this.currentRouteId) {
+      return this.activeRoute.startsWith(route);
+    }
+    
     return this.activeRoute.startsWith(route);
   }
 

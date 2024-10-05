@@ -13,6 +13,8 @@ import { Router } from '@angular/router';
 export class HomeComponent {
   currentModal: string | null = null;
   blogForm!: FormGroup;
+  idToUpdate: string | null = null;
+  isEditMode: boolean = false;
 
   constructor(
     private modalService: ModalService,
@@ -20,9 +22,35 @@ export class HomeComponent {
     private fb: FormBuilder,
     private toastr: ToastrService,
     private router: Router
-  ) {}
+  ) {
+    this.modalService.idTobeEdited.subscribe((id) => {
+      this.idToUpdate = id;
+      if (id) {
+        this.loadBlogData(id);
+      }
+    });
+  }
 
   ngOnInit(): void {
+    this.initializeForm();
+
+    // Subscribe to the modal state to track which modal is open
+    this.modalService.modalState$.subscribe((modalName) => {
+      this.currentModal = modalName;
+      this.isEditMode = modalName === 'updatePost';
+      
+      // Reset form when modal closes
+      if (!modalName) {
+        this.resetForm();
+      }
+    });
+
+    this.blogfireService.getBlogsCollection().subscribe((blogs) => {
+      console.log(blogs);
+    });
+  }
+
+  private initializeForm(): void {
     this.blogForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5)]],
       image: ['', [Validators.required]],
@@ -30,52 +58,95 @@ export class HomeComponent {
       description: ['', [Validators.required, Validators.minLength(10)]],
       date: [new Date(), Validators.required],
     });
-
-    // Subscribe to the modal state to track which modal is open
-    this.modalService.modalState$.subscribe((modalName) => {
-      this.currentModal = modalName;
-    });
-
-    this.blogfireService.getBlogsCollection().subscribe((blogs) => {
-      console.log(blogs);
-    });
-
-    // this.blogfireService.getCommentsCollection().subscribe((comments) => {
-    //   console.log(comments);
-    // });
   }
 
-  createBlog(): void {
-    if (this.blogForm.valid) {
-      console.log('Form is valid', this.blogForm.value);
-      const { title, image, author, description, date } = this.blogForm.value;
-      this.blogfireService
-        .addBlog(author, date, description, image, title)
-        .subscribe((response) => {
-          console.log('Blog added', response);
-          this.toastr.success('Blog added successfully');
-          this.blogForm.reset();
-          this.modalService.closeModal();
+  private loadBlogData(id: string): void {
+    this.blogfireService.getBlogById(id).subscribe(
+      (blog) => {
+        // Only update the editable fields
+        this.blogForm.patchValue({
+          title: blog.title,
+          image: blog.image,
+          author: blog.author,
+          description: blog.description
+          // Note: We're not updating the date field as it should remain the original
         });
+      },
+      (error) => {
+        this.toastr.error('Error loading blog data');
+        console.error('Error loading blog:', error);
+      }
+    );
+  }
+
+  onSubmit(): void {
+    if (this.blogForm.valid) {
+      const formData = this.blogForm.value;
+      console.log('Form data:', formData);
+      
+      if (this.isEditMode && this.idToUpdate) {
+        // Update existing blog
+        // this.blogfireService.updateBlog(
+        //   this.idToUpdate,
+        //   formData.title,
+        //   formData.image,
+        //   formData.author,
+        //   formData.description
+        // ).subscribe(
+        //   () => {
+        //     this.toastr.success('Blog updated successfully');
+        //     this.closeModal();
+        //     // Optionally refresh the page or update the blog list
+        //   },
+        //   (error) => {
+        //     this.toastr.error('Error updating blog');
+        //     console.error('Update error:', error);
+        //   }
+        // );
+      } else {
+        // Create new blog
+        this.createBlog();
+      }
     } else {
-      console.log('Form is invalid');
       this.toastr.error('Please fill out the form correctly');
     }
   }
 
-  // Method to close the modal from the main component
-  closeModal() {
-    this.modalService.closeModal();
+  createBlog(): void {
+    if (this.blogForm.valid) {
+      const { title, image, author, description, date } = this.blogForm.value;
+      this.blogfireService
+        .addBlog(author, date, description, image, title)
+        .subscribe(
+          (response) => {
+            this.toastr.success('Blog added successfully');
+            this.resetForm();
+            this.modalService.closeModal();
+          },
+          (error) => {
+            this.toastr.error('Error adding blog');
+            console.error('Create error:', error);
+          }
+        );
+    }
   }
 
-  acceptTerms() {}
+  private resetForm(): void {
+    this.blogForm.reset();
+    this.blogForm.patchValue({
+      date: new Date()
+    });
+    this.idToUpdate = null;
+    this.isEditMode = false;
+  }
 
-  toggleModal() {
+  closeModal() {
+    this.resetForm();
     this.modalService.closeModal();
   }
 
   deleteBlog() {
-    this.modalService.id.subscribe((id) => {
+    this.modalService.id$.subscribe((id) => {
       if (id) {
         this.blogfireService.deleteBlog(id).subscribe(() => {
           this.toastr.success('Blog deleted successfully');
@@ -87,5 +158,12 @@ export class HomeComponent {
       }
     });
   }
-  updateBlog(){}
+
+  toggleModal(){
+    this.modalService.closeModal();
+  }
+
+  acceptTerms(){
+    this.modalService.closeModal();
+  }
 }

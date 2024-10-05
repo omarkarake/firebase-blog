@@ -7,12 +7,13 @@ import { BehaviorSubject } from 'rxjs';
 export class ModalService {
   // BehaviorSubject to manage the modal state
   private modalState = new BehaviorSubject<string | null>(null);
-  private idToBeDeleted= new BehaviorSubject<string | null>(null);
-
+  private idToBeDeleted = new BehaviorSubject<string | null>(null);
+  public idTobeEdited = new BehaviorSubject<string | null>(null);
 
   // Observable to track modal changes
   modalState$ = this.modalState.asObservable();
-  id = this.idToBeDeleted.asObservable();
+  id$ = this.idToBeDeleted.asObservable();
+  idEdit$ = this.idTobeEdited.asObservable();
 
   // Method to open a modal by its name
   openModal(modalName: string, data?: string) {
