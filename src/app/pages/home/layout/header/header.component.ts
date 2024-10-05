@@ -12,7 +12,7 @@ import { AuthService } from '../../../../services/auth.service';
 })
 export class HeaderComponent implements OnInit {
   isDropdownOpen = false;
-  activeRoute: string = '/main'; // Set default to '/main'
+  activeRoute: string = '';
   currentUser!: User;
 
   constructor(
@@ -28,6 +28,9 @@ export class HeaderComponent implements OnInit {
         this.isDropdownOpen = false;
       }
     });
+
+    // Set initial route
+    this.activeRoute = this.router.url;
   }
 
   ngOnInit(): void {
@@ -35,10 +38,10 @@ export class HeaderComponent implements OnInit {
     this.router.events
       .pipe(
         filter((event) => event instanceof NavigationEnd),
-        map((event: any) => event.urlAfterRedirects) // Get the current URL
+        map((event: any) => event.urlAfterRedirects)
       )
       .subscribe((url) => {
-        this.activeRoute = url ? url : '/main'; // If no route, set to '/main'
+        this.activeRoute = url;
       });
 
     this.authService.getCurrentUser().subscribe((user) => {
@@ -50,22 +53,25 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  // Function to map Firebase User to your custom User model
-  mapFirebaseUserToCustomUser(firebaseUser: any): User {
-    return {
-      fullName: firebaseUser.displayName || '', // Use displayName for fullName
-      email: firebaseUser.email,
-      avatarUrl: firebaseUser.photoURL || '', // Optional avatarUrl
-    };
-  }
-
   // Helper method to check if the current route starts with the provided path
   isActive(route: string): boolean {
+    // If we're checking the main route and the current route is exactly '/main'
+    if (route === '/main/main' && this.activeRoute === '/main') {
+      return true;
+    }
     return this.activeRoute.startsWith(route);
   }
 
+  mapFirebaseUserToCustomUser(firebaseUser: any): User {
+    return {
+      fullName: firebaseUser.displayName || '',
+      email: firebaseUser.email,
+      avatarUrl: firebaseUser.photoURL || '',
+    };
+  }
+
   toggleDropdown(event: MouseEvent): void {
-    event.stopPropagation(); // Prevent triggering the window click event
+    event.stopPropagation();
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
@@ -75,5 +81,13 @@ export class HeaderComponent implements OnInit {
 
   addPost(): void {
     this.modalService.openModal('addPost');
+  }
+
+  updatePost(): void {
+    this.modalService.openModal('updatePost');
+  }
+
+  updateUser(): void {
+    this.modalService.openModal('editProfile');
   }
 }

@@ -52,9 +52,22 @@
       </div>
     </div>
   </div>
+
+  <!-- Conditionally render buttons based on the active route -->
   <div class="flex items-center justify-between gap-4">
-    <div (click)="addPost()">
+    <!-- Button for /main -->
+    <div *ngIf="isActive('/main/main')" (click)="addPost()">
       <app-button text="Add post"></app-button>
+    </div>
+
+    <!-- Button for /main/detail -->
+    <div *ngIf="isActive('/main/detail')" (click)="updatePost()">
+      <app-button text="Update post"></app-button>
+    </div>
+
+    <!-- Button for /main/profile -->
+    <div *ngIf="isActive('/main/profile')" (click)="updateUser()">
+      <app-button text="Update User"></app-button>
     </div>
 
     <!-- Avatar with dropdown -->
@@ -91,7 +104,7 @@
           </div>
           <div class="ml-2 overflow-hidden">
             <p class="font-bold truncate">{{ currentUser.fullName }}</p>
-            <p class="font-light truncate w-full" title="omar@gmail.com">
+            <p class="font-light truncate w-full" title="{{ currentUser.email }}">
               {{ currentUser.email }}
             </p>
           </div>

@@ -87,4 +87,5 @@ export class HomeComponent {
       }
     });
   }
+  updateBlog(){}
 }
