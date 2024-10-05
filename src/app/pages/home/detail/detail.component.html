@@ -11,10 +11,17 @@
         class="w-full h-[400px] rounded-lg"
       />
     </div>
-    <h1 class="text-3xl font-bold mt-4 text-secondary-900">{{ blog.title }}</h1>
-    <div class="text-secondary-500 mt-2">
-      <span class="mr-4">By {{ blog.author }}</span>
-      <span>{{ blog.date | timestamp : "MMMM dd, yyyy" }}</span>
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold mt-4 text-secondary-900">{{ blog.title }}</h1>
+        <div class="text-secondary-500 mt-2">
+          <span class="mr-4">By {{ blog.author }}</span>
+          <span>{{ blog.date | timestamp : "MMMM dd, yyyy" }}</span>
+        </div>
+      </div>
+      <div (click)="deleteBlog(blog.id)">
+        <app-button additionalClasses="!bg-accent-500" [text]="'delete'"></app-button>
+      </div>
     </div>
   </div>
 

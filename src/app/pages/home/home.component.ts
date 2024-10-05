@@ -3,6 +3,7 @@ import { ModalService } from '../../services/modal/modal.service';
 import { BlogfireService } from '../../services/blogfire/blogfire.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,8 @@ export class HomeComponent {
     private modalService: ModalService,
     private blogfireService: BlogfireService,
     private fb: FormBuilder,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -47,13 +49,14 @@ export class HomeComponent {
     if (this.blogForm.valid) {
       console.log('Form is valid', this.blogForm.value);
       const { title, image, author, description, date } = this.blogForm.value;
-      this.blogfireService.addBlog(author, date, description, image, title)
-      .subscribe((response) => {
-        console.log('Blog added', response);
-        this.toastr.success('Blog added successfully');
-        this.blogForm.reset();
-        this.modalService.closeModal();
-      });
+      this.blogfireService
+        .addBlog(author, date, description, image, title)
+        .subscribe((response) => {
+          console.log('Blog added', response);
+          this.toastr.success('Blog added successfully');
+          this.blogForm.reset();
+          this.modalService.closeModal();
+        });
     } else {
       console.log('Form is invalid');
       this.toastr.error('Please fill out the form correctly');
@@ -67,5 +70,21 @@ export class HomeComponent {
 
   acceptTerms() {}
 
-  toggleModal() {}
+  toggleModal() {
+    this.modalService.closeModal();
+  }
+
+  deleteBlog() {
+    this.modalService.id.subscribe((id) => {
+      if (id) {
+        this.blogfireService.deleteBlog(id).subscribe(() => {
+          this.toastr.success('Blog deleted successfully');
+          this.router.navigate(['/main/main']);
+          this.modalService.closeModal();
+        });
+      } else {
+        this.toastr.error('Invalid blog ID');
+      }
+    });
+  }
 }

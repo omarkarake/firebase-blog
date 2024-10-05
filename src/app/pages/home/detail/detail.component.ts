@@ -1,3 +1,4 @@
+import { ModalService } from './../../../services/modal/modal.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BlogfireService } from '../../../services/blogfire/blogfire.service';
@@ -23,7 +24,8 @@ export class DetailComponent implements OnInit {
     private fb: FormBuilder,
     private blogfireService: BlogfireService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -86,5 +88,9 @@ export class DetailComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  deleteBlog(id: string): void {
+    this.modalService.openModal('deletePost', id);
   }
 }

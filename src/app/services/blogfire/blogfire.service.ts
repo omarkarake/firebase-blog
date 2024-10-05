@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDoc, collectionData, Firestore, updateDoc, doc } from '@angular/fire/firestore';
-import { collection } from 'firebase/firestore';
+import { collection, deleteDoc } from 'firebase/firestore';
 import { BehaviorSubject, from, Observable } from 'rxjs';
 import { Blog } from '../../models/blog.model';
 import { Comment } from '../../models/comment.model';
@@ -63,6 +63,12 @@ export class BlogfireService {
       this.getCommentsByBlogId(blogId);
     });
 
+    return from(promise);
+  }
+
+  deleteBlog(blogId: string): Observable<void> {
+    const docRef = doc(this.firestore, `blogs/${blogId}`);
+    const promise = deleteDoc(docRef);
     return from(promise);
   }
 
