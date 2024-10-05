@@ -17,11 +17,10 @@
       <div class="flex items-center gap-4">
         <!-- Home link -->
         <p
-          routerLink="/main"
-          [routerLinkActive]="['font-bold', 'text-primary-500']"
+          routerLink="/main/main"
           [ngClass]="{
-            'font-bold text-primary-500': isActive('/main'),
-            'font-normal': !isActive('/main')
+            'font-bold text-primary-500': isActive('/main/main'),
+            'font-normal': !isActive('/main/main')
           }"
           class="text-sm cursor-pointer"
         >
@@ -36,7 +35,7 @@
           }"
           class="text-sm cursor-pointer"
         >
-          details
+          Details
         </p>
 
         <!-- User profile link -->
