@@ -14,7 +14,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./detail.component.css'],
 })
 export class DetailComponent implements OnInit {
-  blog!: Blog;
+  blog!: Blog | null; // Blog can be null initially
   comments$!: Observable<Comment[]>;
   commentForm!: FormGroup;
   id: string = '';
@@ -31,10 +31,14 @@ export class DetailComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
 
-    // Fetch the blog by its ID
-    this.blogfireService.getBlogById(this.id).subscribe((blog) => {
+    // Subscribe to the blog observable
+    this.blogfireService.blog$.subscribe((blog) => {
       this.blog = blog;
+      console.log('Fetched blog:', blog);
     });
+
+    // Fetch the blog by its ID initially
+    this.blogfireService.getBlogById(this.id);
 
     // Initialize the comment form
     this.commentForm = this.fb.group({
@@ -66,21 +70,17 @@ export class DetailComponent implements OnInit {
     }
   }
 
-  // Add a method to increase the like count
   likeBlog(): void {
     if (this.blog) {
       this.blogfireService.increaseLikes(this.blog.id, this.blog.likes || 0).subscribe(() => {
-        this.blog.likes = (this.blog.likes || 0) + 1;
         this.isLiked = true;
       });
     }
   }
 
-  // Add a method to decrease the like count
   dislikeBlog(): void {
     if (this.blog && this.blog.likes && this.blog.likes > 0) {
       this.blogfireService.decreaseLikes(this.blog.id, this.blog.likes).subscribe(() => {
-        this.blog.likes = (this.blog.likes || 0) - 1;
         this.isLiked = false;
       });
     }

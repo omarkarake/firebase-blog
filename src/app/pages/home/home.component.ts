@@ -4,6 +4,7 @@ import { BlogfireService } from '../../services/blogfire/blogfire.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { Blog } from '../../models/blog.model';
 
 @Component({
   selector: 'app-home',
@@ -62,22 +63,26 @@ export class HomeComponent {
 
   private loadBlogData(id: string): void {
     this.blogfireService.getBlogById(id).subscribe(
-      (blog) => {
-        // Only update the editable fields
-        this.blogForm.patchValue({
-          title: blog.title,
-          image: blog.image,
-          author: blog.author,
-          description: blog.description,
-          // Note: We're not updating the date field as it should remain the original
-        });
+      (blog: Blog | null) => { // Explicitly typing the blog
+        if (blog) {
+          this.blogForm.patchValue({
+            title: blog.title,
+            image: blog.image,
+            author: blog.author,
+            description: blog.description,
+            // We do not update the date field as it should remain the original
+          });
+        } else {
+          this.toastr.error('No blog found');
+        }
       },
-      (error) => {
+      (error: any) => { // Explicitly typing the error
         this.toastr.error('Error loading blog data');
         console.error('Error loading blog:', error);
       }
     );
   }
+  
 
   onSubmit(): void {
     if (this.blogForm.valid) {
