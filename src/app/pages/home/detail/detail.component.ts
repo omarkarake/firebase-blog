@@ -8,6 +8,7 @@ import { Comment } from '../../../models/comment.model';
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
 import { MetaService } from '../../../services/meta.service';
+import { Analytics, logEvent } from '@angular/fire/analytics';
 
 @Component({
   selector: 'app-detail',
@@ -27,7 +28,8 @@ export class DetailComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private modalService: ModalService,
-    private metaService: MetaService
+    private metaService: MetaService,
+    private analytics: Analytics
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +39,7 @@ export class DetailComponent implements OnInit {
     this.blogfireService.blog$.subscribe((blog) => {
       this.blog = blog;
       console.log('Fetched blog:', blog);
+      logEvent(this.analytics, 'page_view', { page_path: `/blog/${this.id}` });
       if (blog) {
         // Update meta tags dynamically based on the blog data
         this.metaService.updateMetaTags({

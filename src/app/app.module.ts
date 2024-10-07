@@ -17,6 +17,8 @@ import { firebaseConfig } from './constants/constants';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { provideAnalytics, getAnalytics } from '@angular/fire/analytics';
+import { ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,6 +45,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
+    provideAnalytics(() => getAnalytics()), // Providing Analytics
+    ScreenTrackingService,  // Tracks screen views automatically
+    UserTrackingService,    // Tracks user behaviors automatically
     // importProvidersFrom([
     //   AngularFireModule.initializeApp(firebaseConfig),
     //   AngularFireAuthModule,
