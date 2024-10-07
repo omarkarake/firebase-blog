@@ -70,10 +70,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "firebase-blog:build:production"
+              "buildTarget": "firebase-blog:build:production"
             },
             "development": {
-              "browserTarget": "firebase-blog:build:development"
+              "buildTarget": "firebase-blog:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -81,7 +81,7 @@
         "prerender": {
           "builder": "@nguniversal/builders:prerender",
           "options": {
-            "browserTarget": "firebase-blog:build:production",
+            "buildTarget": "firebase-blog:build:production",
             "serverTarget": "firebase-blog:server:production",
             "routes": ["/"]
           }
