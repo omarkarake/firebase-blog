@@ -6,7 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Blog } from '../../../models/blog.model';
 import { Comment } from '../../../models/comment.model';
 import { Observable } from 'rxjs';
-import { Location } from '@angular/common'; 
+import { Location } from '@angular/common';
+import { MetaService } from '../../../services/meta.service';
 
 @Component({
   selector: 'app-detail',
@@ -25,7 +26,8 @@ export class DetailComponent implements OnInit {
     private blogfireService: BlogfireService,
     private route: ActivatedRoute,
     private location: Location,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private metaService: MetaService
   ) {}
 
   ngOnInit(): void {
@@ -35,6 +37,26 @@ export class DetailComponent implements OnInit {
     this.blogfireService.blog$.subscribe((blog) => {
       this.blog = blog;
       console.log('Fetched blog:', blog);
+      if (blog) {
+        // Update meta tags dynamically based on the blog data
+        this.metaService.updateMetaTags({
+          title: blog.title,
+          description: blog.description,
+          image: blog.image,
+          url: window.location.href,
+        });
+
+        // Inject structured data (JSON-LD) for the blog post
+        this.metaService.setStructuredData({
+          title: blog.title,
+          description: blog.description,
+          author: blog.author,
+          date: new Date().toISOString(), // Assuming datePublished is current date
+          image: blog.image,
+          url: window.location.href
+        });
+      }
+      // Update meta tags dynamically based on the blog data
     });
 
     // Fetch the blog by its ID initially
@@ -72,17 +94,21 @@ export class DetailComponent implements OnInit {
 
   likeBlog(): void {
     if (this.blog) {
-      this.blogfireService.increaseLikes(this.blog.id, this.blog.likes || 0).subscribe(() => {
-        this.isLiked = true;
-      });
+      this.blogfireService
+        .increaseLikes(this.blog.id, this.blog.likes || 0)
+        .subscribe(() => {
+          this.isLiked = true;
+        });
     }
   }
 
   dislikeBlog(): void {
     if (this.blog && this.blog.likes && this.blog.likes > 0) {
-      this.blogfireService.decreaseLikes(this.blog.id, this.blog.likes).subscribe(() => {
-        this.isLiked = false;
-      });
+      this.blogfireService
+        .decreaseLikes(this.blog.id, this.blog.likes)
+        .subscribe(() => {
+          this.isLiked = false;
+        });
     }
   }
 
